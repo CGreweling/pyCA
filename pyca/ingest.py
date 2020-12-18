@@ -57,8 +57,12 @@ def ingest(event):
     logger.info('Selecting ingest service to use: ' + service_url)
 
     # create mediapackage
-    logger.info('Creating new mediapackage')
-    mediapackage = http_request(service_url + '/createMediaPackage')
+    if config('agent')['backup_mode']:
+      logger.info('Creating mediapackage for backupmode')
+      mediaPackage = http_request(service_url + '/createMediaPackageWithId/' + event.uid)
+    else:
+      logger.info('Creating new mediapackage')
+      mediapackage = http_request(service_url + '/createMediaPackage')
 
     # extract workflow_def, workflow_config and add DC catalogs
     prop = 'org.opencastproject.capture.agent.properties'
@@ -160,7 +164,7 @@ def run():
     '''
     # If we are a backup CA, we don't want to actually upload anything. So
     # let's just quit here and do not run the ingest service at all.
-    if config('agent')['backup_mode']:
-        return
+    #if config('agent')['backup_mode']:
+     #   return
 
     control_loop()
