@@ -57,12 +57,8 @@ def ingest(event):
     logger.info('Selecting ingest service to use: ' + service_url)
 
     # create mediapackage
-    if config('agent')['backup_mode']:
-        logger.info('Creating mediapackage for backupmode')
-        mediapackage = http_request(service_url + '/createMediaPackageWithId/' + event.uid)
-    else:
-        logger.info('Creating new mediapackage')
-        mediapackage = http_request(service_url + '/createMediaPackage')
+    logger.info('Creating new mediapackage')
+    mediapackage = http_request(service_url + '/createMediaPackage')
 
     # extract workflow_def, workflow_config and add DC catalogs
     prop = 'org.opencastproject.capture.agent.properties'
